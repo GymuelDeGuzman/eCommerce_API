@@ -1,3 +1,10 @@
+/*
+    Program:    eCommerce API
+    Programmer: Gymuel De Guzman & Harold Anthony Maralit
+    Section:    2n Year BSCS AN22
+    Date:       July 16, 2023
+*/
+
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userControllers');
@@ -22,14 +29,17 @@ router.get('/:id/details', auth.verify, (req, res) => {
     userController.getProfile({id: req.params.id}).then(resultFromController => res.send(resultFromController))
 })
 
-router.route('/checkout')
-.post((req,res)=>{
-    //create order or checkout
+
+router.route('/:id/products')
+.get((req,res)=>{
+    userController.findAll({id: req.params.id})
+    .then(resultFromController => res.send(resultFromController));
 })
 
-router.route('/orders')
-.get((req,res)=>{
-    //retrieve all orders (admin only)
+router.route('/:id/checkout')
+.post((req,res)=>{
+    //add items to order
+    userController.checkOut({id: req.params.id}, req.body).then(resultFromController => res.send(resultFromController));
 })
 
 module.exports = router;

@@ -1,3 +1,9 @@
+/*
+    Program:    eCommerce API
+    Programmer: Gymuel De Guzman & Harold Anthony Maralit
+    Section:    2n Year BSCS AN22
+    Date:       July 16, 2023
+*/
 
 const mongoose = require('mongoose');
 

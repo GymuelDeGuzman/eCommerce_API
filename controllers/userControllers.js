@@ -1,6 +1,14 @@
+/*
+    Program:    eCommerce API
+    Programmer: Gymuel De Guzman & Harold Anthony Maralit
+    Section:    2n Year BSCS AN22
+    Date:       July 16, 2023
+*/
+
 const User = require('../models/user');
+const Product = require('../models/product');
 const bcrypt = require('bcrypt');
-const auth = require('../auth')
+const auth = require('../auth');
 
 module.exports.registerUser = (reqBody) => {
     let newUser = new User ({
@@ -34,5 +42,41 @@ module.exports.getProfile = (data) => {
     return User.findById(data.id).exec().then(result => {
         result.password = "";
         return result;
+    });
+}
+
+module.exports.checkOut = (data, reqBody) => {
+    let productList = {
+            productName : reqBody.name,
+            quantity : reqBody.quantity
+        }
+    
+
+    return Product.findOne({name: reqBody.name})
+    .then(queryRes => 
+    {
+        if (queryRes == null) return "Can't find product."
+        else 
+        {
+            return User.findOneAndUpdate(
+                {_id: data.id},
+                {$push: {orderedProducts: [
+                            {products: productList}
+                ]}}
+                )
+            .then(result => {
+                if(result == null || result == ""){
+                    return "Cannot find user.";
+                } else {
+                    return "Order successful!";
+                };
+            })
+        }
+    })
+}
+
+module.exports.findAll = (data) => {
+    return User.findById(data.id).exec().then(result => {
+        return result.orderedProducts;
     });
 }
